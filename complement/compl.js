@@ -60,25 +60,58 @@ function calculateTwosComplementFromDecimal(decimal) {
 // END TWO'S COMPLEMENT
 
 // START SEVEN'S COMPLEMENT
+//7's complement
+// Start program
 function calculateSevensComplement() {
     const inputDecimal = parseInt(document.getElementById('input_decimal3').value);
-
-    const inputOctal = inputDecimal.toString(8); // Mengonversi desimal ke oktal
-    const sevensComplement = calculateSevensComplementFromOctal(inputOctal); // Memanggil fungsi yang belum didefinisikan
-
-    document.getElementById('compls7').textContent = `Bilangan desimal dari ${inputDecimal} = ${inputOctal} dalam octal \nJadi 7's Complement dari ${inputOctal} adalah ${sevensComplement}`;
-}
-
-function calculateSevensComplementFromOctal(octal) {
-    let sevensComplement = '';
-    for (let i = 0; i < octal.length; i++) {
-        const digit = parseInt(octal[i], 8);
-        const complement = 7 - digit;
-        sevensComplement += complement.toString(8);
+  
+    // Convert decimal to binary
+    let binaryString = inputDecimal.toString(2);
+  
+    // Handle negative numbers
+    if (inputDecimal < 0) {
+      binaryString = twoComplement(binaryString); // Convert to two's complement
     }
-    return sevensComplement;
-}
-
+  
+    // Pad with leading zeros
+    while (binaryString.length < 8) {
+      binaryString = '0' + binaryString;
+    }
+  
+    // Calculate seven's complement
+    let sevensComplement = '';
+    for (let i = 0; i < binaryString.length; i++) {
+      const digit = parseInt(binaryString[i], 2);
+      const complement = 7 - digit;
+      sevensComplement += complement.toString(2);
+    }
+  
+    // Convert binary to octal
+    const octal = parseInt(sevensComplement, 2).toString(8);
+  
+    document.getElementById('compls7').textContent = `Bilangan desimal dari ${inputDecimal} = ${octal} dalam octal \nJadi 7's Complement dari ${octal} adalah ${sevensComplement}`;
+  }
+  
+  function twoComplement(binaryString) {
+    // Invert the binary string
+    let invertedBinaryString = '';
+    for (let i = 0; i < binaryString.length; i++) {
+      invertedBinaryString += binaryString[i] === '0' ? '1' : '0';
+    }
+  
+    // Add one to the inverted binary string
+    let carry = 1;
+    let result = '';
+    for (let i = binaryString.length - 1; i >= 0; i--) {
+      let sum = parseInt(invertedBinaryString[i], 2) + carry;
+      carry = Math.floor(sum / 2);
+      result = (sum % 2).toString() + result;
+    }
+  
+    return result;
+  }
+  
+  // End program 
 // END SEVEN'S COMPLEMENT
 
 // START EIGTH'S COMPLEMENT
